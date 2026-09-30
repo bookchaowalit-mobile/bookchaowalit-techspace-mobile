@@ -21,7 +21,7 @@ class Catalog(resources: List<TechResource>) {
      * summed over each whitespace-separated term. 0 means no match.
      */
     fun score(resource: TechResource, query: String): Int {
-        val terms = query.lowercase().split(Regex("\\s+")).filter { it.isNotEmpty() }
+        val terms = words(query.lowercase())
         if (terms.isEmpty()) return 0
         val title = resource.title.lowercase()
         val summary = resource.summary.lowercase()
@@ -36,7 +36,7 @@ class Catalog(resources: List<TechResource>) {
     fun search(filter: ResourceFilter, order: SortOrder = SortOrder.RELEVANCE): List<TechResource> {
         // Blank tags (e.g. an empty chip) are ignored instead of matching nothing.
         val wantedTags = filter.tags.map(::normalizeTag).filter { it.isNotEmpty() }.toSet()
-        val hasQuery = filter.query.isNotBlank()
+        val hasQuery = !isVisiblyBlank(filter.query)
         val matches = resources.filter { r ->
             (filter.kinds.isEmpty() || r.kind in filter.kinds) &&
                 (filter.levels.isEmpty() || r.level in filter.levels) &&
