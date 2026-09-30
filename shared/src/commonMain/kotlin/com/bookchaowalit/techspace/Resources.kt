@@ -35,9 +35,9 @@ internal fun isHttpUrl(url: String): Boolean {
     return host.isNotEmpty() && ' ' !in host
 }
 
-/** Normalises a user-entered tag: trims, lowercases, collapses spaces to '-', strips '#'. */
+/** Normalises a user-entered tag: trims, lowercases, collapses spaces to '-', strips leading '#'s. */
 fun normalizeTag(raw: String): String =
-    raw.trim().removePrefix("#").lowercase().split(Regex("\\s+")).filter { it.isNotEmpty() }.joinToString("-")
+    raw.trim().trimStart('#').lowercase().split(Regex("\\s+")).filter { it.isNotEmpty() }.joinToString("-")
 
 /** Estimated reading time in whole minutes (at least 1) at [wordsPerMinute]. */
 fun readingMinutes(wordCount: Int, wordsPerMinute: Int = 200): Int {

@@ -2,7 +2,7 @@
 
 ## Current state
 
-Score: 4/10 (was 1/10) — real, tested KMP shared module with honest CI; no
+Score: 5/10 (was 4/10) — real, tested KMP shared module with honest CI; no
 Android/iOS UI or data source yet.
 
 ## Backlog
@@ -14,7 +14,7 @@ Android/iOS UI or data source yet.
   `commonMain`, fake for tests); persist bookmarks.
 - P2: Pin `distributionSha256Sum` in `gradle-wrapper.properties`.
 
-## Done in this pass
+## Done in this pass (pass 1)
 
 - Replaced the placeholder `AppInfo` with catalog/search/bookmark domain logic + 8 commonTest tests.
 - Committed Gradle wrapper (8.10.2); Kotlin 2.0.0 -> 2.0.21 (patch) for Gradle 8.10 support.
@@ -22,3 +22,9 @@ Android/iOS UI or data source yet.
   Gradle Plugin and coroutines dependency and the non-existent `:androidApp` include.
 - CI: removed `|| true`; runs `:shared:build` (Linux) and iOS simulator tests (macOS).
 - README now describes what actually exists.
+
+## Done in this pass (pass 2)
+
+- Fixed search: a blank tag in the filter (empty chip) made every search return nothing; blank resource tags showed up as an empty tag in `tagCounts`; `##kotlin` normalised to `#kotlin`.
+- Title ordering is now case-insensitive with an id tie-breaker (was: "apple" sorted after "Zebra").
+- 9 more commonTest cases (17 total). Verified with `./gradlew :shared:jvmTest --offline` and `:shared:compileCommonMainKotlinMetadata` (iOS targets need macOS; not run).

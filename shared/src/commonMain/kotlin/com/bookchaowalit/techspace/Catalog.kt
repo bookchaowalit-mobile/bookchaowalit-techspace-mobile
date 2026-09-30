@@ -34,7 +34,8 @@ class Catalog(resources: List<TechResource>) {
     }
 
     fun search(filter: ResourceFilter, order: SortOrder = SortOrder.RELEVANCE): List<TechResource> {
-        val wantedTags = filter.tags.map(::normalizeTag).toSet()
+        // Blank tags (e.g. an empty chip) are ignored instead of matching nothing.
+        val wantedTags = filter.tags.map(::normalizeTag).filter { it.isNotEmpty() }.toSet()
         val hasQuery = filter.query.isNotBlank()
         val matches = resources.filter { r ->
             (filter.kinds.isEmpty() || r.kind in filter.kinds) &&
@@ -45,18 +46,22 @@ class Catalog(resources: List<TechResource>) {
         return when (order) {
             SortOrder.RELEVANCE ->
                 if (hasQuery) {
-                    matches.sortedWith(compareByDescending<TechResource> { score(it, filter.query) }.thenBy { it.title })
+                    matches.sortedWith(compareByDescending<TechResource> { score(it, filter.query) }.then(byTitle))
                 } else {
-                    matches.sortedBy { it.title }
+                    matches.sortedWith(byTitle)
                 }
-            SortOrder.NEWEST -> matches.sortedWith(compareByDescending<TechResource> { it.publishedEpochDay }.thenBy { it.title })
-            SortOrder.SHORTEST -> matches.sortedWith(compareBy<TechResource> { it.wordCount }.thenBy { it.title })
+            SortOrder.NEWEST -> matches.sortedWith(compareByDescending<TechResource> { it.publishedEpochDay }.then(byTitle))
+            SortOrder.SHORTEST -> matches.sortedWith(compareBy<TechResource> { it.wordCount }.then(byTitle))
         }
     }
 
+    /** Case-insensitive title order ("apple" next to "Apple", not after "Zebra"), then id for stability. */
+    private val byTitle: Comparator<TechResource> =
+        compareBy<TechResource, String>(String.CASE_INSENSITIVE_ORDER) { it.title }.thenBy { it.id }
+
     /** Tag -> number of resources, most used first (ties alphabetical). */
     fun tagCounts(): List<Pair<String, Int>> =
-        resources.flatMap { r -> r.tags.map(::normalizeTag).toSet() }
+        resources.flatMap { r -> r.tags.map(::normalizeTag).filter { it.isNotEmpty() }.toSet() }
             .groupingBy { it }.eachCount()
             .toList()
             .sortedWith(compareByDescending<Pair<String, Int>> { it.second }.thenBy { it.first })
