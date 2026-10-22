@@ -1,5 +1,18 @@
 # Techspace — Mobile
 
+## Template copy
+
+This repo is one of the name-substituted Kotlin Multiplatform (`shared` module) template copies in
+`bookchaowalit-mobile`: same project scaffold, build setup and CI as the
+canonical template, with its own domain logic in `shared/`. The canonical
+Kotlin Multiplatform (`shared` module) template is
+[`bookchaowalit-mobile/devtools-status-mobile`](https://github.com/bookchaowalit-mobile/devtools-status-mobile).
+Consolidation or archiving of the copies is pending owner decision D5 (BD-033),
+per `repository-catalog/portfolio/MOBILE-CONSOLIDATION-2026-10.md` in
+solo-empire. Until then this repo is maintained at L1: fail-closed CI
+(`.github/workflows/build.yml`: `./gradlew :shared:build :shared:allTests` on Linux and `:shared:iosSimulatorArm64Test` on macOS) plus the shared `security.yml` scan
+(gitleaks, Semgrep, OSV-Scanner, Trivy) from `bookchaowalit/platform-ci-workflows`.
+
 Kotlin Multiplatform (KMP) shared module for **Techspace**, a curated catalog
 of tech learning resources (articles, videos, tools, courses).
 

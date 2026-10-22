@@ -12,7 +12,7 @@ Android/iOS UI or data source yet.
 - P1: Add an `iosApp` SwiftUI project that links the `shared` framework.
 - P1: Load the catalog from the Techspace frontend/API (Ktor client in
   `commonMain`, fake for tests); persist bookmarks.
-- P2: Pin `distributionSha256Sum` in `gradle-wrapper.properties`.
+- ~~P2: Pin `distributionSha256Sum` in `gradle-wrapper.properties`.~~ Done 2026-10-22.
 
 ## Done in this pass (pass 1)
 
